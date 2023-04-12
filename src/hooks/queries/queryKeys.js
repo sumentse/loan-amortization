@@ -1,4 +1,4 @@
-const loans = {
+const lendingQueryKeys = {
   all: ["loans"],
   listUsers: () => [...loans.all, "users"],
   getUserLoans: (userId) => [...loans.listUsers(), userId, "loans"],
@@ -6,4 +6,4 @@ const loans = {
   getLoanByMonth: (loanId, month) => [...loans.getLoanDetails(loanId), "month", month],
 };
 
-export default loans;
+export default lendingQueryKeys;
