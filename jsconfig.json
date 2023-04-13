@@ -6,6 +6,7 @@
       "@hooks": ["./hooks/*"],
       "@components": ["./components/*"],
       "@containers": ["./containers/*"],
+      "@contexts": ["./contexts/*"],
       "@services": ["./services/*"],
       "@utils": ["./utils/*"]
     }
