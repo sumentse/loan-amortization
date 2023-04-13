@@ -1,3 +1,5 @@
+import PropTypes from "prop-types";
+
 import { useState, useRef } from "react";
 
 import {
@@ -41,11 +43,8 @@ const ActionButtons = ({
   const handleModal = (modalType) => {
     switch (modalType) {
       case "viewLoan":
-        setSelectedUserID(userID);
-        break;
       case "createLoan":
-        break;
-      case "shareLoan":
+        setSelectedUserID(userID);
         break;
       default:
         break;
@@ -99,9 +98,6 @@ const ActionButtons = ({
                   <MenuItem onClick={() => handleModal("createLoan")}>
                     Create Loan
                   </MenuItem>
-                  <MenuItem onClick={() => handleModal("shareLoan")}>
-                    Share Loan
-                  </MenuItem>
                 </MenuList>
               </ClickAwayListener>
             </Paper>
@@ -110,6 +106,13 @@ const ActionButtons = ({
       </Popper>
     </>
   );
+};
+
+ActionButtons.propTypes = {
+  userID: PropTypes.number.isRequired,
+  setSelectedUserID: PropTypes.func.isRequired,
+  openModal: PropTypes.func.isRequired,
+  setModalType: PropTypes.func.isRequired,
 };
 
 export default ActionButtons;
