@@ -9,6 +9,7 @@ import { styled } from "@mui/material/styles";
 import CancelIcon from "@mui/icons-material/Cancel";
 import CreateUserTemplate from "./templates/CreateUserTemplate";
 import CreateLoanTemplate from "./templates/CreateLoanTemplate";
+import ShareLoanTemplate from "./templates/ShareLoanTemplate";
 import ViewUserLoansTemplate from "./templates/ViewUserLoansTemplate";
 
 const StyledContainer = styled(Box)(({ theme }) => {
@@ -35,7 +36,15 @@ const StyledContainer = styled(Box)(({ theme }) => {
   };
 });
 
-const Modal = ({ onSubmit, closeModal, open, type, data }) => {
+const Modal = ({
+  onSubmit,
+  closeModal,
+  isLoading,
+  open,
+  type,
+  data,
+  isError,
+}) => {
   const modalTemplates = {
     createUser: {
       title: "Create User",
@@ -49,6 +58,16 @@ const Modal = ({ onSubmit, closeModal, open, type, data }) => {
       component: CreateLoanTemplate,
       props: {
         onSubmit,
+        userID: data.userID,
+      },
+    },
+    shareLoan: {
+      title: "Share loan",
+      component: ShareLoanTemplate,
+      props: {
+        onSubmit,
+        isError,
+        shareLoanError: data.shareLoanError,
       },
     },
     viewLoan: {
@@ -56,6 +75,7 @@ const Modal = ({ onSubmit, closeModal, open, type, data }) => {
       component: ViewUserLoansTemplate,
       props: {
         userLoans: data.userLoans || [],
+        isLoading: isLoading,
       },
     },
   };
@@ -94,6 +114,16 @@ const Modal = ({ onSubmit, closeModal, open, type, data }) => {
       </StyledContainer>
     </MaterialModal>
   );
+};
+
+Modal.propTypes = {
+  onSubmit: PropTypes.func.isRequired,
+  closeModal: PropTypes.func.isRequired,
+  isLoading: PropTypes.bool.isRequired,
+  open: PropTypes.bool.isRequired,
+  type: PropTypes.string.isRequired,
+  data: PropTypes.object.isRequired,
+  isError: PropTypes.bool.isRequired,
 };
 
 export default Modal;
