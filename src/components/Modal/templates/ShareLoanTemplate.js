@@ -1,32 +1,30 @@
-import { useState } from "react";
-import { Box, Button, TextField } from "@mui/material";
+import { useState, useEffect } from "react";
+import { Box, Button, TextField, Alert } from "@mui/material";
 
 const initialFormState = {
-  amount: 0,
-  apr: 0,
-  term: 0,
-  status: "active",
+  ownerID: 0,
+  loanID: 0,
+  userID: 0,
 };
 
 const validateForm = (formData) => {
   let errors = {};
-  if (formData.amount <= 0) {
-    errors.amount = "Amount must be greater than 0";
+  if (formData.ownerID <= 0) {
+    errors.ownerID = "ownerID must be greater than 0";
   }
-  if (formData.apr <= 0) {
-    errors.apr = "APR must be greater than 0";
+  if (formData.loanID <= 0) {
+    errors.loanID = "loanID must be greater than 0";
   }
-  if (formData.term <= 0) {
-    errors.term = "Term must be greater than 0";
+  if (formData.userID <= 0) {
+    errors.userID = "userID must be greater than 0";
   }
 
   return errors;
 };
 
-const CreateLoanTemplate = ({ onSubmit, userID }) => {
+const ShareLoanTemplate = ({ onSubmit, isError, shareLoanError }) => {
   const [formData, setFormData] = useState({
     ...initialFormState,
-    owner_id: userID,
   });
   const [formErrors, setFormErrors] = useState({});
 
@@ -52,33 +50,38 @@ const CreateLoanTemplate = ({ onSubmit, userID }) => {
     <form onSubmit={handleSubmit}>
       <Box sx={{ display: "flex", flexDirection: "column", gap: 3, mb: 3 }}>
         <TextField
-          name="amount"
-          label="Amount"
+          name="loanID"
+          label="loanID"
           type="number"
-          value={formData.amount}
+          value={formData.loanID}
           onChange={handleInputChange}
-          error={!!formErrors.amount}
-          helperText={formErrors.amount}
+          error={!!formErrors.loanID}
+          helperText={formErrors.loanID}
         />
         <TextField
-          name="apr"
-          label="APR"
+          name="ownerID"
+          label="ownerID"
           type="number"
-          value={formData.apr}
+          value={formData.ownerID}
           onChange={handleInputChange}
-          error={!!formErrors.apr}
-          helperText={formErrors.apr}
+          error={!!formErrors.ownerID}
+          helperText={formErrors.ownerID}
         />
         <TextField
-          name="term"
-          label="Term"
+          name="userID"
+          label="userID"
           type="number"
-          value={formData.term}
+          value={formData.userID}
           onChange={handleInputChange}
-          error={!!formErrors.term}
-          helperText={formErrors.term}
+          error={!!formErrors.userID}
+          helperText={formErrors.userID}
         />
       </Box>
+      {isError && (
+        <Alert sx={{ my: 2 }} severity="error">
+          {shareLoanError?.data?.detail || "Something went wrong"}
+        </Alert>
+      )}
       <Button variant="contained" color="primary" type="submit">
         Submit
       </Button>
@@ -86,4 +89,4 @@ const CreateLoanTemplate = ({ onSubmit, userID }) => {
   );
 };
 
-export default CreateLoanTemplate;
+export default ShareLoanTemplate;

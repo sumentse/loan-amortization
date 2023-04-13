@@ -14,7 +14,7 @@ const CreateUserTemplate = ({ onSubmit }) => {
     if (username === "") {
       setError("Username cannot be empty.");
     } else {
-      onSubmit(username);
+      onSubmit({username});
       setUsername("");
       setError("");
     }
