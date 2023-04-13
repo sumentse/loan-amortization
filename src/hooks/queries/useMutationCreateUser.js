@@ -1,5 +1,6 @@
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import lendingEndpoints from "@services/api/lendingEndpoints";
+import lendingQueryKeys from "./queryKeys";
 
 const createUser = async (userName) => {
   const response = await lendingEndpoints.users.create(userName);
@@ -7,9 +8,10 @@ const createUser = async (userName) => {
 };
 
 const useMutationCreateUser = () => {
+  const queryClient = useQueryClient();
   return useMutation(createUser, {
     onSuccess: () => {
-      // Add any success logic here
+      queryClient.invalidateQueries(lendingQueryKeys.listUsers());
     },
     onError: (error) => {
       // Add any error handling logic here
