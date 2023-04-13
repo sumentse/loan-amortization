@@ -22,8 +22,14 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   },
 }));
 
-const Table = ({ dataId, columns, rows, rowsPerPageOptions, disablePagination, tableContainerStyles }) => {
-
+const Table = ({
+  dataId,
+  columns,
+  rows,
+  rowsPerPageOptions,
+  disablePagination,
+  tableContainerStyles,
+}) => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(rowsPerPageOptions?.[0] || 5);
 
@@ -84,7 +90,11 @@ const Table = ({ dataId, columns, rows, rowsPerPageOptions, disablePagination, t
 
   return (
     <>
-      <TableContainer data-id={dataId} component={Paper} sx={{ maxHeight: 400, ...tableContainerStyles }}>
+      <TableContainer
+        data-testid={dataId}
+        component={Paper}
+        sx={{ maxHeight: 400, ...tableContainerStyles }}
+      >
         <MaterialTable
           aria-label="custom-table"
           sx={{ borderCollapse: "unset" }}
@@ -114,6 +124,7 @@ const Table = ({ dataId, columns, rows, rowsPerPageOptions, disablePagination, t
       </TableContainer>
       {!disablePagination && (
         <TablePagination
+          data-testid={`${dataId}-pagination`}
           rowsPerPageOptions={rowsPerPageOptions || [5, 10, 25]}
           component="div"
           count={rows.length}
@@ -128,6 +139,7 @@ const Table = ({ dataId, columns, rows, rowsPerPageOptions, disablePagination, t
 };
 
 Table.propTypes = {
+  dataId: PropTypes.string,
   columns: PropTypes.arrayOf(
     PropTypes.shape({
       headerName: PropTypes.string.isRequired,
@@ -136,6 +148,8 @@ Table.propTypes = {
   ).isRequired,
   rows: PropTypes.arrayOf(PropTypes.object).isRequired,
   rowsPerPageOptions: PropTypes.arrayOf(PropTypes.number),
+  disablePagination: PropTypes.bool,
+  tableContainerStyles: PropTypes.object,
 };
 
 export default Table;
