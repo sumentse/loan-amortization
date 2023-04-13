@@ -2,8 +2,9 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import lendingEndpoints from "@services/api/lendingEndpoints";
 import lendingQueryKeys from "./queryKeys";
 
-const createUser = async (userName) => {
-  const response = await lendingEndpoints.users.create(userName);
+const createUser = async (params) => {
+  const { username } = params || {};
+  const response = await lendingEndpoints.users.create(username);
   return response.data;
 };
 

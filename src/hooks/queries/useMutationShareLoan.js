@@ -1,8 +1,9 @@
 import { useMutation } from "@tanstack/react-query";
 import lendingEndpoints from "@services/api/lendingEndpoints";
 
-const shareLoan = (loanId) => async () => {
-  const response = await lendingEndpoints.loans.share(loanId);
+const shareLoan = async (params) => {
+  const { loanID, ownerID, userID } = params || {};
+  const response = await lendingEndpoints.loans.share(loanID, ownerID, userID);
   return response.data;
 };
 

@@ -8,10 +8,11 @@ const userEndpoints = {
 
 const loanEndpoints = {
   create: (loanData) => post(`/loans`, loanData),
-  getSchedule: (loanID) => get(`/loans/${loanID}`),
+  getSchedule: (loanID, userID) => get(`/loans/${loanID}?user_id=${userID}`),
   update: (loanID, loanData) => put(`/loans/${loanID}`, loanData),
   getSummary: (loanID, month) => get(`/loans/${loanID}/month/${month}`),
-  share: (loanID) => post(`/loans/${loanID}/share`),
+  share: (loanID, ownerID, userID) =>
+    post(`/loans/${loanID}/share?owner_id=${ownerID}&user_id=${userID}`),
 };
 
 const lendingEndpoints = {

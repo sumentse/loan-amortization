@@ -3,7 +3,7 @@ import lendingEndpoints from "@services/api/lendingEndpoints";
 
 const createLoan = async (params) => {
   const { amount, apr, term, status, owner_id } = params || {};
-  const response = await lendingEndpoints.loan.create({
+  const response = await lendingEndpoints.loans.create({
     amount,
     apr,
     term,
