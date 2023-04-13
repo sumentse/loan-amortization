@@ -114,7 +114,13 @@ const Home = () => {
       };
     });
 
-    return <Table rows={userListWithActions} columns={columns} />;
+    return (
+      <Table
+        rows={userListWithActions}
+        columns={columns}
+        rowsPerPageOptions={[25, 50, 100]}
+      />
+    );
   };
 
   const handleFormSubmit = (data) => {

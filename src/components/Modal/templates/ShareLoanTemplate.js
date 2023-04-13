@@ -1,4 +1,5 @@
-import { useState, useEffect } from "react";
+import PropTypes from 'prop-types';
+import { useState } from "react";
 import { Box, Button, TextField, Alert } from "@mui/material";
 
 const initialFormState = {
@@ -88,5 +89,11 @@ const ShareLoanTemplate = ({ onSubmit, isError, shareLoanError }) => {
     </form>
   );
 };
+
+ShareLoanTemplate.propTypes = {
+    onSubmit: PropTypes.func.isRequired,
+    isError: PropTypes.bool.isRequired,
+    shareLoanError: PropTypes.string,
+}
 
 export default ShareLoanTemplate;
