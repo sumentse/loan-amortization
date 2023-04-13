@@ -1,5 +1,5 @@
 import { Typography, Box, Button, Alert } from "@mui/material";
-import { useEffect } from "react";
+import { useEffect, useCallback } from "react";
 import Table from "@components/Table";
 import { styled } from "@mui/material/styles";
 import { LoadingScreen, Modal, ActionButtons } from "@components";
@@ -8,6 +8,7 @@ import useQueryListAllUsers from "@hooks/queries/useQueryListAllUsers";
 import useQueryGetUserLoan from "@hooks/queries/useQueryGetUserLoan";
 import useMutationCreateUser from "@hooks/queries/useMutationCreateUser";
 import useMutationCreateLoan from "@hooks/queries/useMutationCreateLoan";
+import useMutationShareLoan from "@hooks/queries/useMutationShareLoan";
 import { useMainAction, useMainState } from "@contexts/mainContext";
 
 const columns = [
@@ -23,9 +24,10 @@ const StyledButton = styled(Button)(({ theme }) => {
 });
 
 const Home = () => {
-  const { modalType, selectedUserID, selectedLoanID } = useMainState();
-  const { setModalType, setSelectedUserID, setSelectedLoanID } =
-    useMainAction();
+  const { isOpen, openModal, closeModal } = useModal();
+
+  const { modalType, selectedUserID } = useMainState();
+  const { setModalType, setSelectedUserID } = useMainAction();
 
   const {
     data: UserList,
@@ -51,30 +53,42 @@ const Home = () => {
     reset: resetCreateLoan,
     isError: isCreateLoanError,
   } = useMutationCreateLoan();
+  const {
+    mutate: shareLoan,
+    error: shareLoanError,
+    isLoading: isShareLoanLoading,
+    isSuccess: isShareLoanSuccess,
+    reset: resetShareLoan,
+    isError: isShareLoanError,
+  } = useMutationShareLoan();
 
-  const { isOpen, openModal, closeModal } = useModal();
+  const resetMutateState = useCallback(() => {
+    resetCreateUser();
+    resetCreateLoan();
+    resetShareLoan();
+  }, [resetCreateLoan, resetCreateUser, resetShareLoan]);
 
   useEffect(() => {
-    const resetMutation = {
-      createUser: resetCreateUser,
-      createLoan: resetCreateLoan,
-    };
-    if (isCreateUserSuccess || isCreateLoanSuccess) {
+    if (isCreateUserSuccess || isCreateLoanSuccess || isShareLoanSuccess) {
+      resetMutateState();
       closeModal();
-      resetMutation?.[modalType]?.();
     }
   }, [
     closeModal,
-    modalType,
     isCreateLoanSuccess,
     isCreateUserSuccess,
-    resetCreateLoan,
-    resetCreateUser,
+    isShareLoanSuccess,
+    resetMutateState,
   ]);
 
-  const handleOpenModal = (type) => (event) => {
+  const handleOpenModal = (type) => {
     setModalType(type);
     openModal();
+  };
+
+  const handleCloseModal = () => {
+    resetMutateState();
+    closeModal();
   };
 
   const renderTable = () => {
@@ -105,11 +119,13 @@ const Home = () => {
 
   const handleFormSubmit = (data) => {
     const formSubmit = {
-      createUser: createUser(data),
-      createLoan: console.log("create loan", data),
-      shareLoan: console.log("share loan", data),
+      createUser: () => createUser(data),
+      createLoan: () => createLoan(data),
+      shareLoan: () => shareLoan(data),
     };
-    return formSubmit?.[modalType];
+    if (modalType) {
+      formSubmit[modalType]();
+    }
   };
 
   return (
@@ -125,9 +141,16 @@ const Home = () => {
             <StyledButton
               variant="contained"
               color="primary"
-              onClick={handleOpenModal("createUser")}
+              onClick={() => handleOpenModal("createUser")}
             >
               Create User
+            </StyledButton>
+            <StyledButton
+              variant="contained"
+              color="primary"
+              onClick={() => handleOpenModal("shareLoan")}
+            >
+              Share Loan
             </StyledButton>
           </Box>
           {renderTable()}
@@ -136,10 +159,22 @@ const Home = () => {
             type={modalType}
             data={{
               userLoans,
+              userID: selectedUserID,
+              shareLoanError,
             }}
-            closeModal={closeModal}
-            isLoading={isCreateUserLoading || isCreateLoanLoading}
-            isError={isCreateUserError || isCreateLoanError}
+            closeModal={handleCloseModal}
+            isLoading={
+              isCreateUserLoading ||
+              isCreateLoanLoading ||
+              isUserLoansLoading ||
+              isShareLoanLoading
+            }
+            isError={
+              isCreateUserError ||
+              isCreateLoanError ||
+              isUserLoansError ||
+              isShareLoanError
+            }
             onSubmit={handleFormSubmit}
           />
         </>
