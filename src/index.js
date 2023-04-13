@@ -7,6 +7,7 @@ import { ThemeProvider, createTheme } from "@mui/material/styles";
 import { CssBaseline } from "@mui/material";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
+import { MainProvider } from "@contexts/mainContext";
 import CombineProviders from "@utils/CombineProviders";
 
 const theme = createTheme({});
@@ -18,6 +19,7 @@ const providers = [
   <BrowserRouter />,
   <QueryClientProvider client={queryClient} />,
   <ThemeProvider theme={theme} />,
+  <MainProvider />,
 ];
 
 root.render(
@@ -25,7 +27,9 @@ root.render(
     <CombineProviders providers={providers}>
       <CssBaseline />
       <App />
-      {process.env.NODE_ENV === 'development' && <ReactQueryDevtools initialIsOpen={false} />}
+      {process.env.NODE_ENV === "development" && (
+        <ReactQueryDevtools initialIsOpen={false} />
+      )}
     </CombineProviders>
   </React.StrictMode>
 );
