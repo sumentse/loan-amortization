@@ -51,7 +51,7 @@ const ViewUserLoansTemplate = ({
 
   return (
     <Box>
-      <Table columns={columns} rows={userLoansWithActions} />
+      <Table columns={columns} rows={userLoansWithActions} tableContainerStyles={{maxHeight: 329}} />
     </Box>
   );
 };
