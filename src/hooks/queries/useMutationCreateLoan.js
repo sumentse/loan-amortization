@@ -1,5 +1,6 @@
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import lendingEndpoints from "@services/api/lendingEndpoints";
+import lendingQueryKeys from "./queryKeys";
 
 const createLoan = async (params) => {
   const { amount, apr, term, status, owner_id } = params || {};
@@ -14,9 +15,11 @@ const createLoan = async (params) => {
 };
 
 const useMutationCreateLoan = () => {
+  const queryClient = useQueryClient();
+
   return useMutation(createLoan, {
-    onSuccess: () => {
-      // Add any success logic here
+    onSuccess: ({ owner_id }) => {
+      queryClient.invalidateQueries(lendingQueryKeys.getUserLoans(owner_id));
     },
     onError: (error) => {
       // Add any error handling logic here
